@@ -1,0 +1,47 @@
+.calendar {
+  width: 100vw;
+  height: 70vh;
+  background: rgba(37, 34, 71, 0.72);
+
+  thead {
+    tr {
+      margin: 0;
+      padding-top: 1em;
+      height: 2em;
+
+      th {
+        padding-top: 0.1em;
+        padding-bottom: 0.1em;
+        border-bottom: solid 6px #23b9ff;
+        color: #23b9ff;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      td {
+        border-bottom: solid 2px #23b9ff;
+        color: #23b9ff;
+      }
+    }
+  }
+}
+
+.highlight {
+  background: #16b3e9;
+  color: white !important;
+}
+
+//AGENDA
+agenda {
+  display: inline-block;
+  height: 50px;
+  color: #23b9ff;
+  .agenda-title {
+    display: inline-flex;
+  }
+  .agenda-description {
+    display: inline-flex;
+  }
+}
