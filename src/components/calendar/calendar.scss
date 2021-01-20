@@ -1,7 +1,29 @@
-.calendar {
+.month-switcher {
+  height: 5vh;
+  display: flex;
+  background: #23b9ff;
+  justify-content: space-between;
+  .month-switcher-left--button,
+  .month-switcher-right--button {
+    display: inline-flex;
+    color: white;
+    cursor: pointer;
+    border: solid 4px #0891cf;
+    padding: 0.3em;
+    margin: 0.3em;
+  }
+  .month-title {
+    width: auto;
+    padding: 0.3em;
+    label.month-title--label {
+      font-size: 2em;
+      color: white;
+    }
+  }
+}
+.month-page--table {
   width: 100vw;
   height: 70vh;
-  background: rgba(37, 34, 71, 0.72);
 
   thead {
     tr {
@@ -20,9 +42,10 @@
 
   tbody {
     tr {
+      height: 60px;
       td {
         border-bottom: solid 2px #23b9ff;
-        color: #23b9ff;
+        color: #011824;
       }
     }
   }
@@ -34,12 +57,23 @@
 }
 
 //AGENDA
-agenda {
-  display: inline-block;
-  height: 50px;
+.day {
+  position: relative;
+  .day-text {
+    height: 20px;
+  }
+}
+
+$eventHeight: 20;
+.agenda {
+  display: inline-flex;
+  height: 20px;
   color: #23b9ff;
+  position: relative;
+  width: 100%;
   .agenda-title {
     display: inline-flex;
+    align-self: start;
   }
   .agenda-description {
     display: inline-flex;

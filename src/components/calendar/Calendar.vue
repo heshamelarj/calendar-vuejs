@@ -1,58 +1,44 @@
 <template>
   <div>
-    <table class="calendar">
-      <thead>
-        <tr>
-          <th v-for="weekdayName in weekdaysNames" :key="weekdayName">
-            {{ weekdayName }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="week in weeks" :key="week">
-          <td
-            v-for="day in week"
-            v-bind:class="currentDayOfMonth === day ? highlightClass : ''"
-            :key="day"
-          >
-            {{ day }}
-            <div v-for="(event, index, key) in events" :key="key">
-              <div
-                v-if="
-                  day === getDayAndMonthFromEventDate(event.eventStartDate).day
-                "
-              >
-                <Agenda
-                  :event-title="event.eventTitle"
-                  :description="event.description"
-                  :event-color="event.eventColor"
-                />
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <Event
-      v-bind:currentDayOfMonth="currentDayOfMonth"
-      @eventsAdded="setEvents"
+    <div class="month-switcher">
+      <button class="month-switcher-left--button" @click="showPrevMonth">
+        <span class="prev-month--label">PREV</span>
+      </button>
+      <div class="month-title">
+        <label class="month-title--label">{{ getMonthName }}</label>
+      </div>
+      <button class="month-switcher-right--button">
+        <span class="next-month--label">NEXT</span>
+      </button>
+    </div>
+    <ShowMonth
+      :current-day-of-month="currentDayOfMonth"
+      :events="events"
+      :highlight-class="highlightClass"
+      :weekdays-names="weekdaysNames"
+      :weeks="weeks"
+      :get-day-and-month-from-event-date="getDayAndMonthFromEventDate"
     />
+    <Event :currentDayOfMonth="currentDayOfMonth" @eventsAdded="setEvents" />
   </div>
 </template>
 
 <script>
+import ShowMonth from "@/components/calendar/ShowMonth";
 import Event from "../event/Event";
-import Agenda from "@/components/calendar/Agenda";
 export default {
-  components: { Event, Agenda },
+  components: { ShowMonth, Event },
   data: () => {
     const date = new Date();
     return {
       date,
       currentYear: date.getUTCFullYear(),
+      updatedYear: date.getUTCFullYear(),
       currentDayOfMonth: date.getUTCDate(),
       currentDayOfWeek: date.getDay(),
       currentMonth: date.getUTCMonth(),
+      updatedMonth: date.getUTCMonth(),
+      monthName: "",
       weekdaysNames: [
         "Monday",
         "Tuesday",
@@ -113,6 +99,48 @@ export default {
 
       return month;
     },
+    getMonthName() {
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+
+      return monthNames[this.currentMonth];
+    },
+    getPrevMonth() {
+      let currentMonth = this.currentMonth;
+
+      if (currentMonth === 0) {
+        this.updateYear(this.currentYear - 1);
+        this.updateMonth(11);
+        currentMonth = 11;
+      } else {
+        currentMonth--;
+      }
+      this.updateMonth(currentMonth);
+      return currentMonth;
+    },
+    getNextMonth() {
+      let currentMonth = this.currentMonth;
+      let updatedMonth = this.updatedMonth;
+      if (currentMonth === 11) {
+        this.updateYear(this.currentYear + 1);
+        this.updateMonth(0);
+      } else {
+        updatedMonth++;
+      }
+      return updatedMonth;
+    },
   },
   methods: {
     initCalendar: function () {
@@ -128,35 +156,25 @@ export default {
         day: parseInt(eventDate.split("-")[2], 10),
       };
     },
-    setDaysEvents: function (event) {
-      if (event) {
-        let eventStartDateObject = this.getDayAndMonthFromEventDate(
-          event.eventStartDate
-        );
-        let eventEndDateObject = this.getDayAndMonthFromEventDate(
-          event.eventEndDate
-        );
-        let dayEvent = {};
-        this.weeks.map((week) => {
-          week.find((day) => {
-            if (eventStartDateObject.day === day) {
-              dayEvent = {
-                eventStartDay: day,
-                eventEndDay: null,
-                event,
-              };
-            }
-            if (eventEndDateObject.day === day) {
-              dayEvent.eventEndDay = day;
-            }
-          });
-        });
-        return dayEvent;
-      } else return null;
+
+    updateYear(year) {
+      this.currentYear = year;
+    },
+    updateMonth(month) {
+      this.currentMonth = month;
+      console.log(month);
+    },
+    showPrevMonth() {
+      this.currentMonth = this.getPrevMonth;
+      console.log(this.currentMonth);
+      console.log(this.getCurrentMonthDays);
     },
   },
   mounted() {
     this.initCalendar();
+  },
+  updated() {
+    console.log("updated");
   },
 };
 </script>
